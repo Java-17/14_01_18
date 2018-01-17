@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 
+import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -63,6 +64,18 @@ public class HttpProvider {
             Log.d("MY_TAG", "registration: error:" + error);
             throw new Exception("Server error! Call to support!");
         }
+    }
+
+    public void login(String email, String password, Callback callback){
+        Auth auth = new Auth(email,password);
+        String jsonRequest = gson.toJson(auth);
+
+        RequestBody body = RequestBody.create(JSON,jsonRequest);
+        Request request = new Request.Builder()
+                .url(BASE_URL + "/login")
+                .post(body)
+                .build();
+        client.newCall(request).enqueue(callback);
     }
 
 }
